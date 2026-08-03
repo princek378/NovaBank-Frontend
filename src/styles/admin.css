@@ -419,4 +419,61 @@ button {
 table, th, td {
   border-color:transparent !important;
 }
+/* ========== ADMIN MOBILE FIX ========== */
+@media (max-width: 900px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  /* Hide big sidebar on mobile */
+  .sidebar,
+  .admin-sidebar,
+  aside {
+    position: fixed;
+    left: -280px;
+    top: 0;
+    height: 100%;
+    width: 260px;
+    z-index: 1000;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open,
+  .admin-sidebar.open {
+    left: 0;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 15px !important;
+    width: 100%;
+  }
+
+  .dashboard-title h1 {
+    font-size: 24px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  input, select, button {
+    font-size: 14px !important;
+  }
+
+  .stat-card h1 {
+    font-size: 28px;
+  }
+}
 
