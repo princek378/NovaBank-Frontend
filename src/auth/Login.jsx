@@ -21,21 +21,24 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message || "Invalid email or password");
         return;
       }
 
-      if (data.user.role === "Admin") {
-        setError("Please use the Admin Login portal for administrator access.");
+      // Prevent admin from logging in through customer portal
+      if (data.user?.role === "Admin") {
+        setError("Please use the Admin portal to sign in.");
         return;
       }
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      if (data.user.account_number) {
+
+      if (data.user?.account_number) {
         localStorage.setItem("account_number", data.user.account_number);
       }
 
@@ -50,10 +53,14 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <Link to="/" className="auth-back">← Back to home</Link>
+        <Link to="/" className="auth-back">
+          ← Back to home
+        </Link>
 
         <div className="auth-header">
-          <div className="logo">Nova<span>Bank</span></div>
+          <div className="logo">
+            Nova<span>Bank</span>
+          </div>
           <span className="auth-badge">Customer</span>
           <h1>Welcome back</h1>
           <p>Sign in to your NovaBank account</p>
@@ -93,9 +100,6 @@ export default function Login() {
 
         <div className="auth-footer">
           Don’t have an account? <Link to="/register">Create one</Link>
-          <br />
-          <br />
-          Administrator? <Link to="/admin/login">Admin login</Link>
         </div>
       </div>
     </div>
