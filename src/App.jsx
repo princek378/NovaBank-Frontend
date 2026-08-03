@@ -33,9 +33,14 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
 
-        {/* Admin */}
+        {/* Secret Admin Login (hard to guess) */}
+        <Route path="/secure-admin-portal" element={<AdminLogin />} />
+
+        {/* Old admin login path redirects to home */}
+        <Route path="/admin/login" element={<Navigate to="/" replace />} />
+
+        {/* Admin pages */}
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/customers" element={<Customers />} />
@@ -46,7 +51,7 @@ export default function App() {
         <Route path="/admin/messages" element={<Messages />} />
         <Route path="/admin/settings" element={<Settings />} />
 
-        {/* Customer */}
+        {/* Customer pages */}
         <Route path="/customer/dashboard" element={<CustomerDashboard />} />
         <Route path="/customer/transfer" element={<Transfer />} />
         <Route path="/customer/deposit" element={<Deposit />} />
