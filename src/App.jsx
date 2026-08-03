@@ -25,6 +25,8 @@ import Deposit from "./customer/Deposit";
 import Withdraw from "./customer/Withdraw";
 import Chat from "./customer/Chat";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -34,22 +36,80 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Secret Admin Login (hard to guess) */}
+        {/* Secret Admin Login */}
         <Route path="/secure-admin-portal" element={<AdminLogin />} />
 
-        {/* Old admin login path redirects to home */}
+        {/* Block old admin login path */}
         <Route path="/admin/login" element={<Navigate to="/" replace />} />
 
-        {/* Admin pages */}
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/customers" element={<Customers />} />
-        <Route path="/admin/customers/:id" element={<CustomerProfile />} />
-        <Route path="/admin/new-customer" element={<NewCustomer />} />
-        <Route path="/admin/transactions" element={<Transactions />} />
-        <Route path="/admin/reports" element={<Reports />} />
-        <Route path="/admin/messages" element={<Messages />} />
-        <Route path="/admin/settings" element={<Settings />} />
+        {/* Block bare /admin path */}
+        <Route path="/admin" element={<Navigate to="/" replace />} />
+
+        {/* Protected Admin pages – only Admin role can access */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute role="Admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/customers"
+          element={
+            <ProtectedRoute role="Admin">
+              <Customers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/customers/:id"
+          element={
+            <ProtectedRoute role="Admin">
+              <CustomerProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/new-customer"
+          element={
+            <ProtectedRoute role="Admin">
+              <NewCustomer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/transactions"
+          element={
+            <ProtectedRoute role="Admin">
+              <Transactions />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute role="Admin">
+              <Reports />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/messages"
+          element={
+            <ProtectedRoute role="Admin">
+              <Messages />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <ProtectedRoute role="Admin">
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Customer pages */}
         <Route path="/customer/dashboard" element={<CustomerDashboard />} />
