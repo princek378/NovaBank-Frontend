@@ -30,6 +30,7 @@
   font-size: 1.75rem;
   font-weight: 900;
 }
+
 .landing-logo span {
   color: var(--nb-accent);
 }
@@ -59,6 +60,7 @@
   background: linear-gradient(135deg, #2563eb, #38bdf8);
   box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
 }
+
 .btn-primary:hover {
   transform: translateY(-2px);
 }
@@ -85,18 +87,21 @@
   line-height: 1.15;
   margin-bottom: 1.25rem;
 }
+
 .hero-text h1 .highlight {
   background: linear-gradient(135deg, #38bdf8, #818cf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
 .hero-text p {
   font-size: 1.1rem;
   color: var(--nb-muted);
   max-width: 480px;
   margin-bottom: 2rem;
 }
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -110,16 +115,19 @@
   padding: 2rem;
   box-shadow: var(--nb-shadow);
 }
+
 .hero-card .card-label {
   font-size: 0.85rem;
   color: var(--nb-muted);
   margin-bottom: 0.5rem;
 }
+
 .hero-card .card-balance {
   font-size: 2.3rem;
   font-weight: 800;
   margin-bottom: 1.5rem;
 }
+
 .hero-card .card-row {
   display: flex;
   justify-content: space-between;
@@ -127,6 +135,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 0.95rem;
 }
+
 .hero-card .card-row span:last-child {
   color: var(--nb-accent);
   font-weight: 600;
@@ -137,31 +146,37 @@
   margin: 0 auto;
   padding: 0 6% 4rem;
 }
+
 .features h2 {
   text-align: center;
   font-size: 1.8rem;
   font-weight: 800;
   margin-bottom: 2rem;
 }
+
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
 }
+
 .feature-card {
   background: var(--nb-card);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--nb-radius);
   padding: 1.5rem;
 }
+
 .feature-icon {
   font-size: 1.8rem;
   margin-bottom: 0.8rem;
 }
+
 .feature-card h3 {
   font-size: 1.1rem;
   margin-bottom: 0.4rem;
 }
+
 .feature-card p {
   color: var(--nb-muted);
   font-size: 0.9rem;
@@ -173,15 +188,18 @@
   padding: 0 6%;
   text-align: center;
 }
+
 .portal-section h2 {
   font-size: 1.7rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
 }
+
 .portal-section > p {
   color: var(--nb-muted);
   margin-bottom: 2rem;
 }
+
 .portal-card {
   background: var(--nb-card);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -189,6 +207,7 @@
   padding: 2rem;
   text-align: center;
 }
+
 .portal-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
@@ -226,19 +245,23 @@
   text-align: center;
   margin-bottom: 1.75rem;
 }
+
 .auth-header .logo {
   font-size: 1.4rem;
   font-weight: 900;
   margin-bottom: 0.6rem;
 }
+
 .auth-header .logo span {
   color: var(--nb-accent);
 }
+
 .auth-header h1 {
   font-size: 1.5rem;
   font-weight: 800;
   margin-bottom: 0.3rem;
 }
+
 .auth-header p {
   color: var(--nb-muted);
   font-size: 0.9rem;
@@ -249,11 +272,13 @@
   flex-direction: column;
   gap: 1rem;
 }
+
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
 }
+
 .form-group label {
   font-size: 0.85rem;
   font-weight: 600;
@@ -269,10 +294,12 @@
   color: white;
   font-size: 1rem;
 }
+
 .auth-form input:focus {
   border-color: var(--nb-accent);
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
 }
+
 .auth-form input::placeholder {
   color: #64748b;
 }
@@ -289,6 +316,7 @@
   font-weight: 700;
   cursor: pointer;
 }
+
 .auth-submit:disabled {
   opacity: 0.65;
   cursor: not-allowed;
@@ -311,6 +339,7 @@
   font-size: 0.9rem;
   color: var(--nb-muted);
 }
+
 .auth-footer a {
   color: var(--nb-accent);
   font-weight: 600;
@@ -322,6 +351,7 @@
   font-size: 0.9rem;
   margin-bottom: 1rem;
 }
+
 .auth-back:hover {
   color: var(--nb-accent);
 }
@@ -342,19 +372,30 @@
 @media (max-width: 768px) {
   .landing-nav {
     padding: 1rem 4%;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
   }
+
   .landing-logo {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    width: 100%;
+    text-align: center;
   }
+
   .landing-nav-links {
     width: 100%;
-    gap: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
   }
+
   .landing-nav-links .btn {
-    padding: 0.55rem 1rem;
-    font-size: 0.85rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
   }
 
   .hero {
@@ -363,19 +404,24 @@
     text-align: center;
     gap: 2rem;
   }
+
   .hero-text h1 {
     font-size: 1.9rem;
   }
+
   .hero-text p {
     font-size: 0.95rem;
     margin: 0 auto 1.5rem;
   }
+
   .hero-actions {
     justify-content: center;
   }
+
   .hero-card {
     padding: 1.5rem;
   }
+
   .hero-card .card-balance {
     font-size: 1.9rem;
   }
@@ -383,9 +429,11 @@
   .features {
     padding: 0 4% 3rem;
   }
+
   .features h2 {
     font-size: 1.4rem;
   }
+
   .feature-grid {
     grid-template-columns: 1fr;
   }
