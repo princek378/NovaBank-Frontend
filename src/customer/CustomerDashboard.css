@@ -1,32 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
+/* ===== BASE (works on ALL screen sizes) ===== */
 .cd-page {
   min-height: 100vh !important;
   font-family: 'Inter', system-ui, sans-serif !important;
-  background:
-    radial-gradient(ellipse 90% 60% at 10% -10%, rgba(37, 99, 235, 0.35), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 100% 0%, rgba(56, 189, 248, 0.18), transparent 50%),
-    #020617 !important;
+  background: #020617 !important;
   color: #f8fafc !important;
-  padding: 0 0 3rem !important;
+  padding-bottom: 3rem !important;
 }
 
-.cd-page * {
-  color: inherit;
-}
-
-/* Top bar */
 .cd-topbar {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   padding: 1.1rem 5% !important;
-  background: rgba(15, 23, 42, 0.75) !important;
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.12) !important;
-  position: sticky;
-  top: 0;
-  z-index: 50;
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
 }
 
 .cd-brand {
@@ -47,10 +39,9 @@
 
 .cd-chip {
   display: inline-flex !important;
-  align-items: center !important;
-  padding: 0.45rem 0.9rem !important;
+  padding: 0.4rem 0.85rem !important;
   border-radius: 999px !important;
-  background: rgba(56, 189, 248, 0.12) !important;
+  background: rgba(56, 189, 248, 0.15) !important;
   color: #7dd3fc !important;
   font-size: 0.85rem !important;
   font-weight: 600 !important;
@@ -67,27 +58,20 @@
   font-size: 0.9rem !important;
   cursor: pointer !important;
   color: white !important;
-  text-decoration: none !important;
 }
 
 .cd-btn-ghost {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
   color: #e2e8f0 !important;
 }
 
 .cd-btn-danger {
-  background: rgba(239, 68, 68, 0.2) !important;
-  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  background: rgba(239, 68, 68, 0.25) !important;
+  border: 1px solid rgba(239, 68, 68, 0.45) !important;
   color: #fca5a5 !important;
 }
 
-.cd-btn-primary {
-  background: linear-gradient(135deg, #2563eb, #38bdf8) !important;
-  color: white !important;
-}
-
-/* Main content */
 .cd-main {
   max-width: 1100px !important;
   margin: 0 auto !important;
@@ -99,7 +83,7 @@
 }
 
 .cd-greeting h1 {
-  font-size: clamp(1.6rem, 3vw, 2.1rem) !important;
+  font-size: 2rem !important;
   font-weight: 800 !important;
   color: #f8fafc !important;
   margin-bottom: 0.35rem !important;
@@ -107,17 +91,14 @@
 
 .cd-greeting p {
   color: #94a3b8 !important;
-  font-size: 0.98rem !important;
+  font-size: 1rem !important;
 }
 
-/* Balance card */
 .cd-balance-card {
-  position: relative !important;
-  overflow: hidden !important;
   border-radius: 28px !important;
   padding: 2rem !important;
-  background: linear-gradient(145deg, #1e3a8a 0%, #2563eb 45%, #0ea5e9 100%) !important;
-  box-shadow: 0 25px 50px rgba(37, 99, 235, 0.35) !important;
+  background: linear-gradient(145deg, #1e3a8a, #2563eb, #0ea5e9) !important;
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.35) !important;
   margin-bottom: 1.75rem !important;
   color: white !important;
 }
@@ -130,7 +111,7 @@
 }
 
 .cd-balance-amount {
-  font-size: clamp(2.4rem, 5vw, 3.4rem) !important;
+  font-size: 3rem !important;
   font-weight: 900 !important;
   margin-bottom: 1.25rem !important;
   color: white !important;
@@ -139,7 +120,7 @@
 .cd-balance-meta {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 1.25rem 2rem !important;
+  gap: 1.5rem 2rem !important;
 }
 
 .cd-meta-item {
@@ -160,7 +141,6 @@
   color: white !important;
 }
 
-/* Action buttons */
 .cd-actions {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
@@ -176,16 +156,10 @@
   gap: 0.65rem !important;
   padding: 1.35rem 1rem !important;
   border-radius: 20px !important;
-  background: rgba(15, 23, 42, 0.9) !important;
-  border: 1px solid rgba(148, 163, 184, 0.15) !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25) !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
   cursor: pointer !important;
   color: #f8fafc !important;
-}
-
-.cd-action:hover {
-  transform: translateY(-4px);
-  border-color: rgba(56, 189, 248, 0.4) !important;
 }
 
 .cd-action-icon {
@@ -195,8 +169,8 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 1.45rem !important;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(56, 189, 248, 0.25)) !important;
+  font-size: 1.4rem !important;
+  background: linear-gradient(135deg, #2563eb, #38bdf8) !important;
   color: white !important;
 }
 
@@ -206,7 +180,6 @@
   color: #cbd5e1 !important;
 }
 
-/* Info cards */
 .cd-info-grid {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
@@ -215,18 +188,17 @@
 }
 
 .cd-info-card {
-  background: rgba(15, 23, 42, 0.9) !important;
-  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
   border-radius: 18px !important;
-  padding: 1.25rem 1.35rem !important;
+  padding: 1.25rem !important;
 }
 
 .cd-info-card h4 {
-  font-size: 0.78rem !important;
-  font-weight: 600 !important;
+  font-size: 0.8rem !important;
   color: #94a3b8 !important;
-  text-transform: uppercase !important;
   margin-bottom: 0.5rem !important;
+  text-transform: uppercase !important;
 }
 
 .cd-info-card p {
@@ -235,19 +207,11 @@
   color: #f1f5f9 !important;
 }
 
-/* Transactions */
 .cd-section {
-  background: rgba(15, 23, 42, 0.9) !important;
-  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
   border-radius: 22px !important;
   padding: 1.5rem !important;
-}
-
-.cd-section-header {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  margin-bottom: 1.15rem !important;
 }
 
 .cd-section-header h2 {
@@ -257,7 +221,6 @@
 }
 
 .cd-section-header span {
-  font-size: 0.85rem !important;
   color: #64748b !important;
 }
 
@@ -267,40 +230,6 @@
   color: #64748b !important;
 }
 
-.cd-empty-icon {
-  font-size: 2.5rem !important;
-  margin-bottom: 0.75rem !important;
-}
-
-.cd-tx {
-  display: flex !important;
-  align-items: center !important;
-  gap: 1rem !important;
-  padding: 0.95rem 1rem !important;
-  border-radius: 14px !important;
-  background: rgba(2, 6, 23, 0.45) !important;
-  margin-bottom: 0.5rem !important;
-}
-
-.cd-tx-body h4 {
-  color: #f8fafc !important;
-  font-size: 0.95rem !important;
-}
-
-.cd-tx-body p {
-  color: #64748b !important;
-  font-size: 0.8rem !important;
-}
-
-.cd-tx-amount strong.pos {
-  color: #4ade80 !important;
-}
-
-.cd-tx-amount strong.neg {
-  color: #f87171 !important;
-}
-
-/* Loading */
 .cd-center {
   min-height: 100vh !important;
   display: flex !important;
@@ -311,20 +240,7 @@
   color: #e2e8f0 !important;
 }
 
-.cd-spinner {
-  width: 42px !important;
-  height: 42px !important;
-  border: 3px solid rgba(56, 189, 248, 0.2) !important;
-  border-top-color: #38bdf8 !important;
-  border-radius: 50% !important;
-  animation: cd-spin 0.8s linear infinite;
-}
-
-@keyframes cd-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Responsive */
+/* ===== ONLY layout changes on small screens ===== */
 @media (max-width: 900px) {
   .cd-actions {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -335,16 +251,13 @@
 }
 
 @media (max-width: 560px) {
-  .cd-topbar {
-    padding: 1rem 4% !important;
-  }
   .cd-chip {
     display: none !important;
   }
-  .cd-balance-card {
-    padding: 1.5rem !important;
+  .cd-balance-amount {
+    font-size: 2.2rem !important;
   }
-  .cd-actions {
-    gap: 0.75rem !important;
+  .cd-greeting h1 {
+    font-size: 1.6rem !important;
   }
 }
