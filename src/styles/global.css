@@ -14,8 +14,8 @@ html, body, #root {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: #020617;
-  color: #f8fafc;
+  background: #020617 !important;
+  color: #f8fafc !important;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -45,12 +45,4 @@ a {
 ::-webkit-scrollbar-thumb {
   background: #2563eb;
   border-radius: 20px;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 768px) {
-  html, body {
-    font-size: 15px;
-    overflow-x: hidden !important;
-  }
 }
