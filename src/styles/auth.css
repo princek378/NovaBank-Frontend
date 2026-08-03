@@ -199,3 +199,83 @@ body {
   .form-row { grid-template-columns: 1fr; }
   .auth-card { padding: 1.75rem 1.35rem; }
 }
+/* ========== MOBILE FIX ========== */
+@media (max-width: 768px) {
+  .landing-nav {
+    padding: 1rem 4%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .landing-logo {
+    font-size: 1.4rem;
+  }
+
+  .landing-nav-links {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .landing-nav-links .btn {
+    padding: 0.6rem 1.1rem;
+    font-size: 0.85rem;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 2rem 5% 3rem;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .hero-text h1 {
+    font-size: 2.1rem;
+    line-height: 1.2;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-card {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .features {
+    padding: 0 5% 3rem;
+  }
+
+  .features h2 {
+    font-size: 1.5rem;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-section {
+    padding: 0 5% 3rem;
+  }
+
+  .portal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card {
+    margin: 1rem;
+    padding: 1.75rem 1.4rem;
+    border-radius: 22px;
+  }
+
+  .auth-header h1 {
+    font-size: 1.4rem;
+  }
+}
