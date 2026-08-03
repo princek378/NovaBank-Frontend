@@ -1,3 +1,7 @@
+/* ================================
+   NOVABANK ADMIN - FULL STYLES
+================================ */
+
 .admin-layout {
   display: flex;
   min-height: 100vh;
@@ -10,6 +14,7 @@
   margin-left: 260px;
   padding: 28px;
   min-height: 100vh;
+  width: calc(100% - 260px);
 }
 
 /* Sidebar */
@@ -18,29 +23,37 @@
   width: 260px;
   min-height: 100vh;
   background: #0f172a;
-  border-right: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
   padding: 24px 16px;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 100;
+  overflow-y: auto;
 }
 
-/* Cards & sections */
+/* Header */
 .dashboard-title {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(15, 23, 42, 0.85);
   padding: 24px;
   border-radius: 18px;
   margin-bottom: 24px;
-}
-.dashboard-title h1 {
-  font-size: 28px;
-  margin-bottom: 6px;
-}
-.dashboard-title p {
-  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.dashboard-title h1 {
+  font-size: 28px;
+  margin: 0 0 6px 0;
+  color: white;
+}
+
+.dashboard-title p {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Stat Cards */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -53,25 +66,38 @@
   padding: 22px;
   border-radius: 18px;
   border: 1px solid rgba(56, 189, 248, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
+
 .stat-card h3 {
   color: #94a3b8;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
+  font-weight: 500;
 }
+
 .stat-card h1 {
   font-size: 28px;
   color: #38bdf8;
+  margin: 0;
 }
 
+/* Sections */
 .admin-section {
   background: rgba(15, 23, 42, 0.85);
   padding: 24px;
   border-radius: 18px;
   margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Inputs & Buttons */
+.admin-section h2 {
+  color: white;
+  margin: 0 0 18px 0;
+  font-size: 20px;
+}
+
+/* Inputs */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -87,6 +113,8 @@ textarea {
   font-size: 15px !important;
   width: 100%;
   box-sizing: border-box;
+  outline: none !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 input:focus,
@@ -96,6 +124,11 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18) !important;
 }
 
+input::placeholder {
+  color: #64748b !important;
+}
+
+/* Buttons */
 button,
 .btn,
 .view-btn,
@@ -108,11 +141,19 @@ button,
   font-size: 14px !important;
   cursor: pointer !important;
   color: white !important;
+  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: inherit;
 }
 
 button:not(.delete-btn):not(.freeze-btn):not(.logout-btn),
 .view-btn {
   background: linear-gradient(135deg, #2563eb, #38bdf8) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+button:not(.delete-btn):not(.freeze-btn):not(.logout-btn):hover,
+.view-btn:hover {
+  transform: translateY(-1px);
 }
 
 .freeze-btn {
@@ -132,13 +173,16 @@ table {
   border-radius: 14px;
   overflow: hidden;
 }
+
 th {
   background: #1e3a8a;
   color: white;
   padding: 14px 12px;
   text-align: left;
   font-size: 13px;
+  font-weight: 600;
 }
+
 td {
   padding: 13px 12px;
   border-bottom: 1px solid rgba(148, 163, 184, 0.1);
@@ -146,47 +190,120 @@ td {
   color: #e2e8f0;
 }
 
-/* ===== MOBILE ADMIN ===== */
+tr:hover {
+  background: rgba(30, 58, 138, 0.2);
+}
+
+/* Status badges */
+.status-active {
+  background: #16a34a;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-frozen {
+  background: #dc2626;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ================================
+   MOBILE FIX
+================================ */
 @media (max-width: 900px) {
   .admin-layout {
-    flex-direction: column;
+    display: block !important;
   }
 
+  /* Hide sidebar completely on phone */
   .sidebar,
-  .admin-sidebar {
-    display: none !important; /* Hide sidebar on phone */
+  .admin-sidebar,
+  .admin-layout > div:first-child,
+  aside {
+    display: none !important;
   }
 
-  .main-content {
+  .main-content,
+  .admin-layout > div:last-child {
     margin-left: 0 !important;
-    padding: 16px !important;
     width: 100% !important;
+    padding: 14px !important;
+  }
+
+  .dashboard-title {
+    padding: 16px !important;
+    margin-bottom: 16px !important;
   }
 
   .dashboard-title h1 {
-    font-size: 22px;
+    font-size: 20px !important;
+  }
+
+  .dashboard-title p {
+    font-size: 13px !important;
   }
 
   .cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .stat-card {
+    padding: 16px !important;
+  }
+
+  .stat-card h3 {
+    font-size: 13px !important;
   }
 
   .stat-card h1 {
-    font-size: 24px;
+    font-size: 22px !important;
+  }
+
+  .admin-section {
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .admin-section h2 {
+    font-size: 17px !important;
   }
 
   table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+    display: block !important;
+    overflow-x: auto !important;
+    width: 100% !important;
   }
 
   th, td {
-    padding: 10px 8px;
-    font-size: 13px;
+    padding: 10px 8px !important;
+    font-size: 12px !important;
   }
 
-  input, select, button {
+  button,
+  .btn,
+  .view-btn,
+  .freeze-btn,
+  .delete-btn {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  select,
+  textarea {
+    padding: 11px 12px !important;
     font-size: 14px !important;
   }
 }
