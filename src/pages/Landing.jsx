@@ -12,8 +12,8 @@ export default function Landing() {
           <Link to="/login" className="btn btn-outline">
             Customer Login
           </Link>
-          <Link to="/admin/login" className="btn btn-primary">
-            Admin Portal
+          <Link to="/register" className="btn btn-primary">
+            Open an Account
           </Link>
         </div>
       </nav>
@@ -68,7 +68,7 @@ export default function Landing() {
           <div className="feature-card">
             <div className="feature-icon">🔒</div>
             <h3>Bank-grade Security</h3>
-            <p>JWT-protected sessions and account freeze tools keep your funds safe.</p>
+            <p>Protected sessions and account freeze tools keep your funds safe.</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">📊</div>
@@ -84,26 +84,20 @@ export default function Landing() {
       </section>
 
       <section className="portal-section">
-        <h2>Choose your portal</h2>
-        <p>Customers manage their own accounts. Admins oversee the entire bank.</p>
+        <h2>Get started with NovaBank</h2>
+        <p>Create an account or sign in to manage your money securely.</p>
         <div className="portal-grid">
           <div className="portal-card">
             <div className="portal-icon">👤</div>
             <h3>Customer</h3>
-            <p>Create an account, log in, transfer, deposit, withdraw and chat with support.</p>
+            <p>
+              Create an account, log in, transfer, deposit, withdraw and chat with support.
+            </p>
             <Link to="/register" className="btn btn-primary" style={{ marginRight: 8 }}>
               Create Account
             </Link>
             <Link to="/login" className="btn btn-outline">
               Login
-            </Link>
-          </div>
-          <div className="portal-card">
-            <div className="portal-icon">🛡️</div>
-            <h3>Administrator</h3>
-            <p>Manage customers, transactions, reports, settings and change admin credentials.</p>
-            <Link to="/admin/login" className="btn btn-primary">
-              Admin Login
             </Link>
           </div>
         </div>
