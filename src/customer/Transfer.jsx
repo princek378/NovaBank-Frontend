@@ -9,6 +9,8 @@ const COUNTRIES = [
   "Mexico", "Philippines", "Singapore", "Malaysia", "Other",
 ];
 
+const DRAFT_KEY = "transfer_draft";
+
 export default function Transfer() {
   const navigate = useNavigate();
   const [step, setStep] = useState("type"); // type | form | codes | receipt
@@ -27,26 +29,51 @@ export default function Transfer() {
   const [loading, setLoading] = useState(false);
   const [receipt, setReceipt] = useState(null);
 
+  // Restore draft when coming back from chat
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.transferType) setTransferType(d.transferType);
+        if (d.receiver) setReceiver(d.receiver);
+        if (d.country) setCountry(d.country);
+        if (d.bankName) setBankName(d.bankName);
+        if (d.beneficiary) setBeneficiary(d.beneficiary);
+        if (d.amount) setAmount(d.amount);
+        if (d.imf) setImf(d.imf);
+        if (d.cot) setCot(d.cot);
+        if (d.step) setStep(d.step);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
   useEffect(() => {
     async function load() {
       try {
         const token = localStorage.getItem("token");
-        if (token) {
-          const res = await fetch(`${getApiUrl()}/api/customer/profile`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const data = await res.json();
-          if (res.ok && data.account?.account_number) {
-            setMyAccount(data.account.account_number);
-            localStorage.setItem("account_number", data.account.account_number);
-          }
+        if (!token) {
+          navigate("/login");
+          return;
         }
-        const r = await fetch(`${getApiUrl()}/api/settings/transfer-rules`);
-        if (r.ok) {
-          const rulesData = await r.json();
+        const [profileRes, rulesRes] = await Promise.all([
+          fetch(`${getApiUrl()}/api/customer/profile`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${getApiUrl()}/api/settings/transfer-rules`),
+        ]);
+        const profile = await profileRes.json();
+        if (profileRes.ok && profile.account?.account_number) {
+          setMyAccount(profile.account.account_number);
+          localStorage.setItem("account_number", profile.account.account_number);
+        }
+        if (rulesRes.ok) {
+          const r = await rulesRes.json();
           setRules({
-            require_imf: !!rulesData.require_imf,
-            require_cot: !!rulesData.require_cot,
+            require_imf: !!r.require_imf,
+            require_cot: !!r.require_cot,
           });
         }
       } catch (e) {
@@ -54,7 +81,27 @@ export default function Transfer() {
       }
     }
     load();
-  }, []);
+  }, [navigate]);
+
+  function saveDraft(nextStep) {
+    const draft = {
+      step: nextStep || step,
+      transferType,
+      receiver,
+      country,
+      bankName,
+      beneficiary,
+      amount,
+      imf,
+      cot,
+    };
+    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  }
+
+  function clearDraft() {
+    sessionStorage.removeItem(DRAFT_KEY);
+    sessionStorage.removeItem("chat_return_to");
+  }
 
   function goToCodes() {
     setMessage("");
@@ -68,41 +115,41 @@ export default function Transfer() {
       setMessage("Enter a valid amount");
       return;
     }
-    if (transferType === "local") {
-      if (!receiver) {
+    if (transferType === "local" && !receiver) {
+      setOk(false);
+      setMessage("Enter receiver NovaBank account number");
+      return;
+    }
+    if (transferType === "international") {
+      if (!country) {
         setOk(false);
-        setMessage("Enter receiver NovaBank account number");
+        setMessage("Select a country");
         return;
       }
-      // Local: go to codes if required, else transfer now
-      if (rules.require_imf || rules.require_cot) {
-        setStep("codes");
-      } else {
-        makeTransfer();
+      if (!bankName.trim()) {
+        setOk(false);
+        setMessage("Enter the bank name");
+        return;
       }
-      return;
+      if (!receiver) {
+        setOk(false);
+        setMessage("Enter beneficiary account number");
+        return;
+      }
     }
-    // International
-    if (!country) {
-      setOk(false);
-      setMessage("Select a country");
-      return;
-    }
-    if (!bankName.trim()) {
-      setOk(false);
-      setMessage("Enter the bank name");
-      return;
-    }
-    if (!receiver) {
-      setOk(false);
-      setMessage("Enter beneficiary account number");
-      return;
-    }
+
     if (rules.require_imf || rules.require_cot) {
       setStep("codes");
+      saveDraft("codes");
     } else {
       makeTransfer();
     }
+  }
+
+  function openSupportForCodes() {
+    saveDraft("codes");
+    sessionStorage.setItem("chat_return_to", "/customer/transfer");
+    navigate("/customer/chat");
   }
 
   async function makeTransfer() {
@@ -144,6 +191,7 @@ export default function Transfer() {
       });
       const data = await response.json();
       if (response.ok) {
+        clearDraft();
         setOk(true);
         setReceipt(data);
         setStep("receipt");
@@ -176,7 +224,6 @@ td:last-child{text-align:right;font-weight:600}</style></head><body>
 ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""}
 <tr><td>Amount</td><td>$${Number(receipt.amount || 0).toLocaleString(undefined,{minimumFractionDigits:2})}</td></tr>
 </table>
-<p style="text-align:center;font-size:12px;color:#666;margin-top:20px">Print → Save as PDF</p>
 </div><script>window.onload=function(){window.print()}</script></body></html>`;
     win.document.write(html);
     win.document.close();
@@ -185,15 +232,31 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
   if (step === "type") {
     return (
       <div style={s.page}>
-        <button style={s.back} onClick={() => navigate("/customer/dashboard")}>← Back</button>
+        <button style={s.back} onClick={() => navigate("/customer/dashboard")}>
+          ← Back
+        </button>
         <div style={s.card}>
           <h1 style={s.title}>Transfer money</h1>
-          <p style={s.sub}>From: <strong>{myAccount || "Loading…"}</strong></p>
-          <button style={s.choice} onClick={() => { setTransferType("local"); setStep("form"); }}>
+          <p style={s.sub}>
+            From: <strong>{myAccount || "Loading…"}</strong>
+          </p>
+          <button
+            style={s.choice}
+            onClick={() => {
+              setTransferType("local");
+              setStep("form");
+            }}
+          >
             <strong>Local transfer</strong>
             <span style={s.choiceSub}>Between NovaBank customers</span>
           </button>
-          <button style={s.choice} onClick={() => { setTransferType("international"); setStep("form"); }}>
+          <button
+            style={s.choice}
+            onClick={() => {
+              setTransferType("international");
+              setStep("form");
+            }}
+          >
             <strong>International transfer</strong>
             <span style={s.choiceSub}>Send to a bank in any country</span>
           </button>
@@ -205,12 +268,20 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
   if (step === "codes") {
     return (
       <div style={s.page}>
-        <button style={s.back} onClick={() => setStep("form")}>← Back to details</button>
+        <button
+          style={s.back}
+          onClick={() => {
+            setStep("form");
+            saveDraft("form");
+          }}
+        >
+          ← Back to details
+        </button>
         <div style={s.card}>
           <h1 style={s.title}>Security verification</h1>
           <p style={s.sub}>
-            Enter your IMF and COT codes to complete this transfer of{" "}
-            <strong>${Number(amount).toLocaleString()}</strong>
+            Enter IMF / COT codes to complete transfer of{" "}
+            <strong>${Number(amount || 0).toLocaleString()}</strong>
           </p>
 
           {rules.require_imf && (
@@ -236,11 +307,7 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
             </div>
           )}
 
-          <button
-            type="button"
-            style={s.linkBtn}
-            onClick={() => navigate("/customer/chat")}
-          >
+          <button type="button" style={s.linkBtn} onClick={openSupportForCodes}>
             Request IMF / COT code from support (live chat)
           </button>
 
@@ -262,20 +329,29 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
             <h1 style={s.title}>Transfer successful</h1>
           </div>
           <Row label="Reference" value={receipt.reference} />
-          <Row label="Type" value={receipt.transfer_type === "local" ? "Local" : "International"} />
+          <Row
+            label="Type"
+            value={receipt.transfer_type === "local" ? "Local" : "International"}
+          />
           <Row label="From" value={receipt.from_account} />
           <Row label="To" value={receipt.to_account} />
           {receipt.bank_name && <Row label="Bank" value={receipt.bank_name} />}
           <Row
             label="Amount"
-            value={`$${Number(receipt.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+            value={`$${Number(receipt.amount).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+            })}`}
           />
-          <Row label="Status" value={receipt.status || "Completed"} />
           <button style={{ ...s.submit, marginTop: 16 }} onClick={downloadPdf}>
             Download receipt (PDF)
           </button>
           <button
-            style={{ ...s.submit, background: "transparent", border: "1px solid #64748b", marginTop: 10 }}
+            style={{
+              ...s.submit,
+              background: "transparent",
+              border: "1px solid #64748b",
+              marginTop: 10,
+            }}
             onClick={() => navigate("/customer/dashboard")}
           >
             Back to dashboard
@@ -288,21 +364,31 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
   // form step
   return (
     <div style={s.page}>
-      <button style={s.back} onClick={() => setStep("type")}>← Change type</button>
+      <button style={s.back} onClick={() => setStep("type")}>
+        ← Change type
+      </button>
       <div style={s.card}>
         <h1 style={s.title}>
           {transferType === "local" ? "Local transfer" : "International transfer"}
         </h1>
-        <p style={s.sub}>From: <strong>{myAccount || "…"}</strong></p>
+        <p style={s.sub}>
+          From: <strong>{myAccount || "…"}</strong>
+        </p>
 
         {transferType === "international" && (
           <>
             <div style={s.field}>
               <label style={s.label}>Country *</label>
-              <select style={s.input} value={country} onChange={(e) => setCountry(e.target.value)}>
+              <select
+                style={s.input}
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+              >
                 <option value="">Select country</option>
                 {COUNTRIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
                 ))}
               </select>
             </div>
@@ -320,13 +406,14 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
 
         <div style={s.field}>
           <label style={s.label}>
-            {transferType === "local" ? "Receiver NovaBank account *" : "Account number *"}
+            {transferType === "local"
+              ? "Receiver NovaBank account *"
+              : "Account number *"}
           </label>
           <input
             style={s.input}
             value={receiver}
             onChange={(e) => setReceiver(e.target.value)}
-            placeholder={transferType === "local" ? "NB1234567890" : "Beneficiary account number"}
           />
         </div>
 
