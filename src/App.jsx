@@ -9,6 +9,7 @@ import Landing from "./pages/Landing";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import GuestSupport from "./pages/GuestSupport";
+import SupportDesk from "./pages/SupportDesk";
 
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/support" element={<GuestSupport />} />
+        <Route path="/support-desk" element={<SupportDesk />} />
 
         {/* Secret Admin Login */}
         <Route path="/secure-admin-portal" element={<AdminLogin />} />
