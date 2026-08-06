@@ -10,13 +10,20 @@ export default function Chat() {
   const [loading, setLoading] = useState(true);
   const bottomRef = useRef(null);
 
+  // Where to go when user clicks Back
+  const returnTo = sessionStorage.getItem("chat_return_to") || "/customer/dashboard";
+  const returnLabel =
+    returnTo.includes("/transfer")
+      ? "← Back to transfer (enter IMF / COT)"
+      : "← Back to dashboard";
+
   useEffect(() => {
     loadProfile();
   }, []);
 
   useEffect(() => {
     if (!customer?.id) return;
-    const t = setInterval(() => loadMessages(customer.id, false), 5000);
+    const t = setInterval(() => loadMessages(customer.id, false), 4000);
     return () => clearInterval(t);
   }, [customer]);
 
@@ -72,12 +79,22 @@ export default function Chat() {
     }
   }
 
+  function goBack() {
+    // Keep chat_return_to until Transfer reads the draft, then clear path only
+    navigate(returnTo);
+  }
+
   return (
     <div style={s.page}>
-      <button style={s.back} onClick={() => navigate("/customer/dashboard")}>
-        ← Back to dashboard
+      <button style={s.back} onClick={goBack}>
+        {returnLabel}
       </button>
       <h1 style={s.title}>💬 NovaBank Support</h1>
+      {returnTo.includes("/transfer") && (
+        <p style={{ color: "#94a3b8", marginBottom: 16, fontSize: 14 }}>
+          Ask admin for your IMF / COT codes, then go back to finish your transfer.
+        </p>
+      )}
 
       <div style={s.container}>
         <div style={s.messages}>
@@ -117,15 +134,81 @@ export default function Chat() {
 }
 
 const s = {
-  page: { minHeight: "100vh", background: "#020617", color: "#f8fafc", fontFamily: "Inter, system-ui, sans-serif", padding: "24px 5%" },
-  back: { background: "transparent", border: "none", color: "#94a3b8", cursor: "pointer", marginBottom: 16, fontSize: 15 },
-  title: { fontSize: 24, fontWeight: 800, color: "#f8fafc", marginBottom: 20 },
-  container: { maxWidth: 700, margin: "0 auto", background: "rgba(15,23,42,0.95)", border: "1px solid rgba(148,163,184,0.15)", borderRadius: 24, overflow: "hidden", display: "flex", flexDirection: "column", height: "70vh" },
-  messages: { flex: 1, overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 12 },
-  myMsg: { alignSelf: "flex-end", background: "linear-gradient(135deg,#2563eb,#38bdf8)", color: "white", padding: "12px 16px", borderRadius: "16px 16px 4px 16px", maxWidth: "75%" },
-  adminMsg: { alignSelf: "flex-start", background: "rgba(30,41,59,0.9)", color: "#e2e8f0", padding: "12px 16px", borderRadius: "16px 16px 16px 4px", maxWidth: "75%", border: "1px solid rgba(148,163,184,0.15)" },
+  page: {
+    minHeight: "100vh",
+    background: "#020617",
+    color: "#f8fafc",
+    fontFamily: "Inter, system-ui, sans-serif",
+    padding: "24px 5%",
+  },
+  back: {
+    background: "transparent",
+    border: "none",
+    color: "#94a3b8",
+    cursor: "pointer",
+    marginBottom: 16,
+    fontSize: 15,
+  },
+  title: { fontSize: 24, fontWeight: 800, color: "#f8fafc", marginBottom: 12 },
+  container: {
+    maxWidth: 700,
+    margin: "0 auto",
+    background: "rgba(15,23,42,0.95)",
+    border: "1px solid rgba(148,163,184,0.15)",
+    borderRadius: 24,
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
+    height: "70vh",
+  },
+  messages: {
+    flex: 1,
+    overflowY: "auto",
+    padding: 20,
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+  myMsg: {
+    alignSelf: "flex-end",
+    background: "linear-gradient(135deg,#2563eb,#38bdf8)",
+    color: "white",
+    padding: "12px 16px",
+    borderRadius: "16px 16px 4px 16px",
+    maxWidth: "75%",
+  },
+  adminMsg: {
+    alignSelf: "flex-start",
+    background: "rgba(30,41,59,0.9)",
+    color: "#e2e8f0",
+    padding: "12px 16px",
+    borderRadius: "16px 16px 16px 4px",
+    maxWidth: "75%",
+    border: "1px solid rgba(148,163,184,0.15)",
+  },
   msgMeta: { display: "block", fontSize: 11, opacity: 0.75, marginTop: 6 },
-  inputRow: { display: "flex", gap: 10, padding: 16, borderTop: "1px solid rgba(148,163,184,0.12)" },
-  input: { flex: 1, padding: "12px 16px", borderRadius: 12, border: "1.5px solid rgba(148,163,184,0.25)", background: "rgba(2,6,23,0.7)", color: "#f8fafc", fontSize: 15 },
-  sendBtn: { padding: "12px 20px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#2563eb,#38bdf8)", color: "white", fontWeight: 700, cursor: "pointer" },
+  inputRow: {
+    display: "flex",
+    gap: 10,
+    padding: 16,
+    borderTop: "1px solid rgba(148,163,184,0.12)",
+  },
+  input: {
+    flex: 1,
+    padding: "12px 16px",
+    borderRadius: 12,
+    border: "1.5px solid rgba(148,163,184,0.25)",
+    background: "rgba(2,6,23,0.7)",
+    color: "#f8fafc",
+    fontSize: 15,
+  },
+  sendBtn: {
+    padding: "12px 20px",
+    borderRadius: 12,
+    border: "none",
+    background: "linear-gradient(135deg,#2563eb,#38bdf8)",
+    color: "white",
+    fontWeight: 700,
+    cursor: "pointer",
+  },
 };
