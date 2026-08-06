@@ -15,43 +15,55 @@ export default function Transfer() {
   const [step, setStep] = useState("type");
   const [transferType, setTransferType] = useState("");
   const [myAccount, setMyAccount] = useState(localStorage.getItem("account_number") || "");
+  const [rules, setRules] = useState({ require_imf: true, require_cot: true });
   const [receiver, setReceiver] = useState("");
   const [bankName, setBankName] = useState("");
   const [beneficiary, setBeneficiary] = useState("");
   const [amount, setAmount] = useState("");
+  const [imf, setImf] = useState("");
+  const [cot, setCot] = useState("");
   const [message, setMessage] = useState("");
   const [ok, setOk] = useState(false);
   const [loading, setLoading] = useState(false);
   const [receipt, setReceipt] = useState(null);
 
-  // Always load real account number from profile
   useEffect(() => {
-    async function loadAccount() {
+    async function load() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
           navigate("/login");
           return;
         }
-        const res = await fetch(`${getApiUrl()}/api/customer/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        if (res.ok && data.account?.account_number) {
-          setMyAccount(data.account.account_number);
-          localStorage.setItem("account_number", data.account.account_number);
+        const [profileRes, rulesRes] = await Promise.all([
+          fetch(`${getApiUrl()}/api/customer/profile`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${getApiUrl()}/api/settings/transfer-rules`),
+        ]);
+        const profile = await profileRes.json();
+        if (profileRes.ok && profile.account?.account_number) {
+          setMyAccount(profile.account.account_number);
+          localStorage.setItem("account_number", profile.account.account_number);
+        }
+        if (rulesRes.ok) {
+          const r = await rulesRes.json();
+          setRules({
+            require_imf: !!r.require_imf,
+            require_cot: !!r.require_cot,
+          });
         }
       } catch (e) {
         console.log(e);
       }
     }
-    loadAccount();
+    load();
   }, [navigate]);
 
   async function makeTransfer() {
     if (!myAccount) {
       setOk(false);
-      setMessage("Your account number was not found. Please log out and log in again.");
+      setMessage("Your account number was not found. Log out and log in again.");
       return;
     }
     if (!amount || Number(amount) <= 0) {
@@ -76,6 +88,16 @@ export default function Transfer() {
         return;
       }
     }
+    if (rules.require_imf && !imf.trim()) {
+      setOk(false);
+      setMessage("IMF code is required");
+      return;
+    }
+    if (rules.require_cot && !cot.trim()) {
+      setOk(false);
+      setMessage("COT code is required");
+      return;
+    }
 
     setLoading(true);
     setMessage("");
@@ -89,10 +111,12 @@ export default function Transfer() {
         body: JSON.stringify({
           from_account: myAccount,
           to_account: receiver,
-          amount: amount,
+          amount,
           transfer_type: transferType,
           bank_name: bankName,
           beneficiary_name: beneficiary,
+          imf_code: imf,
+          cot_code: cot,
         }),
       });
       const data = await response.json();
@@ -164,16 +188,14 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
             <div style={{ fontSize: 48, color: "#22c55e" }}>✓</div>
             <h1 style={s.title}>Transfer successful</h1>
           </div>
-          <div style={{ marginBottom: 16 }}>
-            <Row label="Reference" value={receipt.reference} />
-            <Row label="Type" value={receipt.transfer_type === "local" ? "Local" : "International"} />
-            <Row label="From" value={receipt.from_account} />
-            <Row label="To" value={receipt.to_account} />
-            {receipt.bank_name && <Row label="Bank" value={receipt.bank_name} />}
-            <Row label="Amount" value={`$${Number(receipt.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`} />
-            <Row label="Status" value={receipt.status || "Completed"} />
-          </div>
-          <button style={s.submit} onClick={downloadPdf}>Download receipt (PDF)</button>
+          <Row label="Reference" value={receipt.reference} />
+          <Row label="Type" value={receipt.transfer_type === "local" ? "Local" : "International"} />
+          <Row label="From" value={receipt.from_account} />
+          <Row label="To" value={receipt.to_account} />
+          {receipt.bank_name && <Row label="Bank" value={receipt.bank_name} />}
+          <Row label="Amount" value={`$${Number(receipt.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`} />
+          <Row label="Status" value={receipt.status || "Completed"} />
+          <button style={{ ...s.submit, marginTop: 16 }} onClick={downloadPdf}>Download receipt (PDF)</button>
           <button
             style={{ ...s.submit, background: "transparent", border: "1px solid #64748b", marginTop: 10 }}
             onClick={() => navigate("/customer/dashboard")}
@@ -197,7 +219,9 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
             <label style={s.label}>Bank / payment service</label>
             <select style={s.input} value={bankName} onChange={(e) => setBankName(e.target.value)}>
               <option value="">Select bank or service</option>
-              {BANKS.map((b) => <option key={b} value={b}>{b}</option>)}
+              {BANKS.map((b) => (
+                <option key={b} value={b}>{b}</option>
+              ))}
             </select>
           </div>
         )}
@@ -220,6 +244,30 @@ ${receipt.bank_name ? `<tr><td>Bank</td><td>${receipt.bank_name}</td></tr>` : ""
           <label style={s.label}>Amount (USD)</label>
           <input style={s.input} type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
         </div>
+
+        {/* IMF / COT */}
+        {rules.require_imf && (
+          <div style={s.field}>
+            <label style={s.label}>IMF code *</label>
+            <input
+              style={s.input}
+              value={imf}
+              onChange={(e) => setImf(e.target.value)}
+              placeholder="Enter IMF code"
+            />
+          </div>
+        )}
+        {rules.require_cot && (
+          <div style={s.field}>
+            <label style={s.label}>COT code *</label>
+            <input
+              style={s.input}
+              value={cot}
+              onChange={(e) => setCot(e.target.value)}
+              placeholder="Enter COT code"
+            />
+          </div>
+        )}
 
         <button style={s.submit} onClick={makeTransfer} disabled={loading}>
           {loading ? "Processing…" : "Confirm transfer"}
