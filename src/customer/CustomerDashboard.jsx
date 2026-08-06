@@ -45,6 +45,19 @@ function CustomerDashboard() {
     navigate("/login");
   }
 
+  function formatDate(iso) {
+    if (!iso) return "—";
+    try {
+      return new Date(iso).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return "—";
+    }
+  }
+
   if (loading) {
     return (
       <div style={styles.center}>
@@ -70,6 +83,8 @@ function CustomerDashboard() {
   const accountType = customer?.account?.account_type || "Savings";
   const currency = customer?.account?.currency || "USD";
   const transactions = customer?.transactions || [];
+  const createdAt =
+    customer?.account?.created_at || customer?.created_at || null;
 
   return (
     <div style={styles.page}>
@@ -131,24 +146,40 @@ function CustomerDashboard() {
               <div style={styles.metaLabel}>Status</div>
               <div style={styles.metaValue}>{customer?.status || "Active"}</div>
             </div>
+            <div>
+              <div style={styles.metaLabel}>Account created</div>
+              <div style={styles.metaValue}>{formatDate(createdAt)}</div>
+            </div>
           </div>
         </div>
 
         {/* Actions */}
         <div style={styles.actions}>
-          <button style={styles.action} onClick={() => navigate("/customer/transfer")}>
+          <button
+            style={styles.action}
+            onClick={() => navigate("/customer/transfer")}
+          >
             <div style={styles.actionIcon}>↗</div>
             <span>Transfer</span>
           </button>
-          <button style={styles.action} onClick={() => navigate("/customer/deposit")}>
+          <button
+            style={styles.action}
+            onClick={() => navigate("/customer/deposit")}
+          >
             <div style={styles.actionIcon}>↓</div>
             <span>Deposit</span>
           </button>
-          <button style={styles.action} onClick={() => navigate("/customer/withdraw")}>
+          <button
+            style={styles.action}
+            onClick={() => navigate("/customer/withdraw")}
+          >
             <div style={styles.actionIcon}>↑</div>
             <span>Withdraw</span>
           </button>
-          <button style={styles.action} onClick={() => navigate("/customer/chat")}>
+          <button
+            style={styles.action}
+            onClick={() => navigate("/customer/chat")}
+          >
             <div style={styles.actionIcon}>💬</div>
             <span>Chat</span>
           </button>
@@ -165,14 +196,20 @@ function CustomerDashboard() {
             <p style={styles.infoValue}>{customer?.phone || "Not set"}</p>
           </div>
           <div style={styles.infoCard}>
-            <h4 style={styles.infoLabel}>Member since</h4>
-            <p style={styles.infoValue}>NovaBank Customer</p>
+            <h4 style={styles.infoLabel}>Account created</h4>
+            <p style={styles.infoValue}>{formatDate(createdAt)}</p>
           </div>
         </div>
 
         {/* Transactions */}
         <section style={styles.section}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: 16,
+            }}
+          >
             <h2 style={{ fontSize: 18, fontWeight: 800, color: "#f8fafc" }}>
               Recent transactions
             </h2>
@@ -184,7 +221,9 @@ function CustomerDashboard() {
           {transactions.length === 0 ? (
             <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>
               <div style={{ fontSize: 32, marginBottom: 10 }}>📭</div>
-              <p>No transactions yet. Make a deposit or transfer to get started.</p>
+              <p>
+                No transactions yet. Make a deposit or transfer to get started.
+              </p>
             </div>
           ) : (
             transactions.map((tx) => (
@@ -195,6 +234,9 @@ function CustomerDashboard() {
                   </div>
                   <div style={{ fontSize: 13, color: "#64748b" }}>
                     {tx.type || tx.transaction_type || "—"}
+                    {tx.date
+                      ? ` · ${new Date(tx.date).toLocaleDateString()}`
+                      : ""}
                   </div>
                 </div>
                 <div style={{ fontWeight: 700, color: "#f8fafc" }}>
