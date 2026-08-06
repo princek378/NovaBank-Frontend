@@ -9,6 +9,9 @@ export default function Landing() {
           Nova<span>Bank</span>
         </div>
         <div className="landing-nav-links">
+          <Link to="/support" className="btn btn-outline">
+            Contact Support
+          </Link>
           <Link to="/login" className="btn btn-outline">
             Customer Login
           </Link>
@@ -35,6 +38,9 @@ export default function Landing() {
             </Link>
             <Link to="/login" className="btn btn-outline">
               Sign In
+            </Link>
+            <Link to="/support" className="btn btn-outline">
+              Contact Support
             </Link>
           </div>
         </div>
@@ -78,14 +84,14 @@ export default function Landing() {
           <div className="feature-card">
             <div className="feature-icon">💬</div>
             <h3>Live Support Chat</h3>
-            <p>Message the bank team directly from your customer portal anytime.</p>
+            <p>Message the bank team anytime — even before you open an account.</p>
           </div>
         </div>
       </section>
 
       <section className="portal-section">
         <h2>Get started with NovaBank</h2>
-        <p>Create an account or sign in to manage your money securely.</p>
+        <p>Create an account, sign in, or contact support without registering.</p>
         <div className="portal-grid">
           <div className="portal-card">
             <div className="portal-icon">👤</div>
@@ -96,8 +102,11 @@ export default function Landing() {
             <Link to="/register" className="btn btn-primary" style={{ marginRight: 8 }}>
               Create Account
             </Link>
-            <Link to="/login" className="btn btn-outline">
+            <Link to="/login" className="btn btn-outline" style={{ marginRight: 8 }}>
               Login
+            </Link>
+            <Link to="/support" className="btn btn-outline">
+              Contact Support
             </Link>
           </div>
         </div>
