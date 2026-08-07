@@ -8,6 +8,7 @@ import {
 import Landing from "./pages/Landing";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
+import ForgotPassword from "./auth/ForgotPassword";
 import GuestSupport from "./pages/GuestSupport";
 import SupportDesk from "./pages/SupportDesk";
 
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/support" element={<GuestSupport />} />
         <Route path="/support-desk" element={<SupportDesk />} />
 
@@ -49,7 +51,7 @@ export default function App() {
         {/* Block bare /admin path */}
         <Route path="/admin" element={<Navigate to="/" replace />} />
 
-        {/* Protected Admin pages – only Admin role can access */}
+        {/* Protected Admin pages */}
         <Route
           path="/admin/dashboard"
           element={
