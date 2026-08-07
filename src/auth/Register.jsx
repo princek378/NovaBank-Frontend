@@ -36,13 +36,13 @@ export default function Register() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.message || "Could not send code");
+        setError(data.message || "Could not create account");
         return;
       }
-      setSuccess("We sent a 6-digit code to your email. Enter it below.");
+      setSuccess("Account started. Enter the verification code we sent to your email.");
       setStep("otp");
     } catch {
-      setError("Cannot connect to server");
+      setError("Cannot connect to server. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -64,11 +64,11 @@ export default function Register() {
         return;
       }
       setSuccess(
-        `Account created! Account number: ${data.account_number}. Redirecting to login…`
+        `Account created! Your account number is ${data.account_number}. Redirecting to login…`
       );
       setTimeout(() => navigate("/login"), 2500);
     } catch {
-      setError("Cannot connect to server");
+      setError("Cannot connect to server. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -80,6 +80,7 @@ export default function Register() {
         <Link to="/" className="auth-back">
           ← Back to home
         </Link>
+
         <div className="auth-header">
           <div className="logo">
             Nova<span>Bank</span>
@@ -88,8 +89,8 @@ export default function Register() {
           <h1>{step === "form" ? "Create your account" : "Verify your email"}</h1>
           <p>
             {step === "form"
-              ? "We will send a verification code to your email"
-              : `Code sent to ${form.email}`}
+              ? "Open a NovaBank account in under a minute"
+              : `We sent a code to ${form.email}`}
           </p>
         </div>
 
@@ -101,59 +102,98 @@ export default function Register() {
             <div className="form-row">
               <div className="form-group">
                 <label>First name</label>
-                <input name="first_name" value={form.first_name} onChange={handleChange} required />
+                <input
+                  name="first_name"
+                  placeholder="John"
+                  value={form.first_name}
+                  onChange={handleChange}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Last name</label>
-                <input name="last_name" value={form.last_name} onChange={handleChange} required />
+                <input
+                  name="last_name"
+                  placeholder="Doe"
+                  value={form.last_name}
+                  onChange={handleChange}
+                  required
+                />
               </div>
             </div>
+
             <div className="form-group">
               <label>Email</label>
-              <input name="email" type="email" value={form.email} onChange={handleChange} required />
+              <input
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
             </div>
+
             <div className="form-group">
               <label>Password</label>
               <input
                 name="password"
                 type="password"
+                placeholder="At least 6 characters"
                 value={form.password}
                 onChange={handleChange}
                 required
                 minLength={6}
               />
             </div>
+
             <div className="form-group">
               <label>Phone (optional)</label>
-              <input name="phone" value={form.phone} onChange={handleChange} />
+              <input
+                name="phone"
+                placeholder="+1 555 000 0000"
+                value={form.phone}
+                onChange={handleChange}
+              />
             </div>
+
             <div className="form-group">
               <label>Address (optional)</label>
-              <input name="address" value={form.address} onChange={handleChange} />
+              <input
+                name="address"
+                placeholder="Street, City"
+                value={form.address}
+                onChange={handleChange}
+              />
             </div>
+
             <button type="submit" className="auth-submit" disabled={loading}>
-              {loading ? "Sending code…" : "Send verification code"}
+              {loading ? "Creating account..." : "Create Account"}
             </button>
           </form>
         ) : (
           <form className="auth-form" onSubmit={verifyOtp}>
             <div className="form-group">
-              <label>6-digit OTP</label>
+              <label>Verification code</label>
               <input
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                placeholder="123456"
+                placeholder="6-digit code"
                 required
                 maxLength={6}
               />
             </div>
             <button type="submit" className="auth-submit" disabled={loading}>
-              {loading ? "Verifying…" : "Verify & create account"}
+              {loading ? "Verifying..." : "Verify & finish"}
             </button>
             <button
               type="button"
               className="auth-submit"
-              style={{ marginTop: 10, background: "transparent", border: "1px solid #64748b" }}
+              style={{
+                marginTop: 10,
+                background: "transparent",
+                border: "1px solid #64748b",
+              }}
               onClick={() => setStep("form")}
             >
               Back
