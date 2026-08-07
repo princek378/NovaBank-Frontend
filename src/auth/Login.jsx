@@ -29,7 +29,6 @@ export default function Login() {
         return;
       }
 
-      // Prevent admin from logging in through customer portal
       if (data.user?.role === "Admin") {
         setError("Please use the Admin portal to sign in.");
         return;
@@ -99,6 +98,8 @@ export default function Login() {
         </form>
 
         <div className="auth-footer">
+          <Link to="/forgot-password">Forgot password?</Link>
+          <br />
           Don’t have an account? <Link to="/register">Create one</Link>
         </div>
       </div>
